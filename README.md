@@ -66,24 +66,123 @@ The APPLICATIION_TYPES and CLASSIFICATIONS columns were again binned, but less s
 - For the CLASSIFICATIONS column, if there was a total count of any value less than 10 this was pooled into 'Other'
 
 ##### The ASK_AMT column
-It was also noted that the ASK_AMT column contains values which are heavily skewed right.
+It was also noted that the ASK_AMT column contains values which are heavily skewed right as shown in the boxplot below.
+
+![Boxplot](./image/box_plot.png)
+
+After reading about some [different ways to handle skewed right datasets](https://machinelearningmastery.com/skewness-be-gone-transformative-tricks-for-data-scientists/), I decided to use Yeo-Jonhson Transformation which is implemented in the scikit-learn preprocessing library.
+
+
 
 ## Compiling Training and Evaluating the Model
 
 ### Initial Model
-The sugge
+The initial model is a simple 2 layer neural network. The first layer is simply the number of data points in the training set.
+```
+Model: "initial_model"
+_________________________________________________________________
+ Layer (type)                Output Shape              Param #   
+=================================================================
+ Layer_1 (Dense)             (None, 86)                3784      
+                                                                 
+ Layer_2 (Dense)             (None, 129)               11223     
+                                                                 
+ Output (Dense)              (None, 1)                 130       
+                                                                 
+=================================================================
+Total params: 15137 (59.13 KB)
+Trainable params: 15137 (59.13 KB)
+Non-trainable params: 0 (0.00 Byte)
+_________________________________________________________________
+```
+This model was trained using 30 epochs and achieved a validation score as follows:
+
+```
+Loss: 0.5545585751533508, Accuracy: 0.7253644466400146
+```
 
 
 ### Optimising the Model
-What steps did you take in your attempts to increase model performance?
+As mentioned in the pre-processing section, there were steps taken to improve and optimise the pre-processing step. Using the same layer parameters as the "initial_model" as a base case, the following loss and accuracy attributes verify the improvement in predictions:
 
-How many neurons, layers, and activation functions did you select for your neural network model, and why?
+```
+Loss: 0.5523973107337952, Accuracy: 0.7328279614448547
+```
+
+In an attempt to improve model performance, I used Keras-Tuner to help iterate through different hyperparameter values including:
+- Adding a dropout layer with 30% dropout for the input to help add stability to model predictions
+- Different activation functions: 'relu' and 'tanh' for the different hidden layers
+- Different number of hidden layers ranging from 2 to 5.
+- Different number of neurons per layer ranging from 140 to 350 which corresponds to 2-5 x the rounded number of input features. (i.e. number of input features is 66 for the training set therefore 2x70 to 5x70 corresponds to 140 to 350)
+- Increase the number of epochs to 50 from 30.
+
+The following summarises the top 5 hyperparmeters for the top 5 models:
+```
+{'activation': 'tanh', 'first_units': 210, 'num_layers': 3, 'units_0': 280, 'units_1': 230, 'units_2': 180, 'units_3': 350, 'tuner/epochs': 50, 'tuner/initial_epoch': 0, 'tuner/bracket': 0, 'tuner/round': 0}
+{'activation': 'relu', 'first_units': 160, 'num_layers': 2, 'units_0': 200, 'units_1': 230, 'units_2': 150, 'units_3': 230, 'tuner/epochs': 50, 'tuner/initial_epoch': 17, 'tuner/bracket': 2, 'tuner/round': 2, 'tuner/trial_id': '0070'}
+{'activation': 'relu', 'first_units': 230, 'num_layers': 2, 'units_0': 310, 'units_1': 250, 'units_2': 300, 'units_3': 340, 'tuner/epochs': 17, 'tuner/initial_epoch': 0, 'tuner/bracket': 1, 'tuner/round': 0}
+{'activation': 'tanh', 'first_units': 350, 'num_layers': 4, 'units_0': 220, 'units_1': 240, 'units_2': 340, 'units_3': 280, 'tuner/epochs': 50, 'tuner/initial_epoch': 17, 'tuner/bracket': 3, 'tuner/round': 3, 'tuner/trial_id': '0137'}
+{'activation': 'tanh', 'first_units': 270, 'num_layers': 1, 'units_0': 290, 'units_1': 160, 'units_2': 300, 'units_3': 170, 'tuner/epochs': 6, 'tuner/initial_epoch': 0, 'tuner/bracket': 2, 'tuner/round': 0}
+
+```
+
+For example the top model has a structure of:
+```
+Model: "sequential"
+_________________________________________________________________
+ Layer (type)                Output Shape              Param #   
+=================================================================
+ dropout (Dropout)           (None, 66)                0         
+                                                                 
+ Layer_1 (Dense)             (None, 210)               14070     
+                                                                 
+ Layer_2 (Dense)             (None, 280)               59080     
+                                                                 
+ Layer_3 (Dense)             (None, 230)               64630     
+                                                                 
+ Layer_4 (Dense)             (None, 180)               41580     
+                                                                 
+ Output (Dense)              (None, 1)                 181       
+                                                                 
+=================================================================
+Total params: 179541 (701.33 KB)
+Trainable params: 179541 (701.33 KB)
+Non-trainable params: 0 (0.00 Byte)
+_________________________________________________________________
+None
+
+```
 
 ## Results 
 
-Using bulleted lists and images to support your answers, address the following questions:
+The following results document the validated loss and prediction attributes the top 5 models on the test data.
+```
+model 1 Loss: 0.5511918663978577, Accuracy: 0.7331778407096863
+
+model 2 Loss: 0.5487939119338989, Accuracy: 0.7328279614448547
+
+model 3 Loss: 0.5521612167358398, Accuracy: 0.7328279614448547
+
+model 4 Loss: 0.5524091124534607, Accuracy: 0.7328279614448547
+
+model 5 Loss: 0.5549689531326294, Accuracy: 0.7328279614448547
+
+```
+
+## Summary
+As shown in the previous results, after some effort, I was not able to achieve a validated accuracy on the target of 75%.
+Disappointingly, there is only very minimal improvement using the deeper neural networks and optimisation steps described above compared to the initial model. 
+
+Other types of classification techniques could be used to solve this binary problem such as dimensionality reduction techniques  followed by supervised classification techniques.
+Some dimensionality reduction techniques could include:
+- PCA
+- t-SNE
+  
+Some supervised learning classification techniques include:
+- SVMs
+- KNN
+- Random-Forest
+
+These techniques should work as they are all classification techniques for supervised machine learning problems because this project is essentially a binary classification model.
 
 
-## Summary: 
-Were you able to achieve the target model performance?
-Summarise the overall results of the deep learning model. Include a recommendation for how a different model could solve this classification problem, and then explain your recommendation.
