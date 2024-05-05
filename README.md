@@ -116,7 +116,7 @@ In an attempt to improve model performance, I used Keras-Tuner to help iterate t
 - Different number of neurons per layer ranging from 140 to 350 which corresponds to 2-5 x the rounded number of input features. (i.e. number of input features is 66 for the training set therefore 2x70 to 5x70 corresponds to 140 to 350)
 - Increase the number of epochs to 50 from 30.
 
-The following summarises the top 5 hyperparmeters for the top 5 models:
+The following summarises the top 5 hyperparmeters for the top 5 models (sorted by best first):
 ```
 {'activation': 'tanh', 'first_units': 210, 'num_layers': 3, 'units_0': 280, 'units_1': 230, 'units_2': 180, 'units_3': 350, 'tuner/epochs': 50, 'tuner/initial_epoch': 0, 'tuner/bracket': 0, 'tuner/round': 0}
 {'activation': 'relu', 'first_units': 160, 'num_layers': 2, 'units_0': 200, 'units_1': 230, 'units_2': 150, 'units_3': 230, 'tuner/epochs': 50, 'tuner/initial_epoch': 17, 'tuner/bracket': 2, 'tuner/round': 2, 'tuner/trial_id': '0070'}
