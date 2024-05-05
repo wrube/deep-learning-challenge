@@ -179,16 +179,21 @@ model 5 Loss: 0.5549689531326294, Accuracy: 0.7328279614448547
 As shown in the previous results, after some effort, I was not able to achieve a validated accuracy on the target of 75%.
 Disappointingly, there is only very minimal improvement using the deeper neural networks and optimisation steps described above compared to the initial model. 
 
-Other types of classification techniques could be used to solve this binary problem such as dimensionality reduction techniques  followed by supervised classification techniques.
-Some dimensionality reduction techniques could include:
-- PCA
-- t-SNE
-  
+
+Other types of classification techniques could be used to solve this binary classification problem such as the various supervised learning classification techniques. 
 Some supervised learning classification techniques include:
 - SVMs
 - KNN
 - Random-Forest
 
 These techniques should work as they are all classification techniques for supervised machine learning problems because this project is essentially a binary classification model.
+
+There is optionality to use dimensionality reduction techniques *before* the supervised learning classification techniques. These techniques may help aid in reducing the large number of features >40 for visualisation and QC purposes for the clustering algorithms.
+Some dimensionality reduction techniques could include:
+- PCA
+- t-SNE
+
+
+
 
 
