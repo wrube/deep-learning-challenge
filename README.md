@@ -17,6 +17,8 @@ Model weight checkpoints are located in [checkpoints/](./checkpoints/).
 #### Models
 Initial and final trained models are located in [models/](./models/).
 
+# Results
+
 ## Data Preprocessing
 ### Features in the model
 From Alphabet Soup’s business team, you have received a CSV containing more than 34,000 organisations that have received funding from Alphabet Soup over the years. Within this dataset are a number of columns that capture metadata about each organisation, such as:
@@ -95,6 +97,8 @@ Trainable params: 15137 (59.13 KB)
 Non-trainable params: 0 (0.00 Byte)
 _________________________________________________________________
 ```
+This model used 86 neurons in the first layer and 129 neurons in the second layer. The reason for these seemingly random numbers is that there is a 'rule-of-thumb' (suggested in class notes) which is - hidden layers should have 2-3 times the number of input features. In this case the number of features in the training dataset is 43.
+
 This model was trained using 30 epochs and achieved a validation score as follows:
 
 ```
@@ -153,7 +157,7 @@ None
 
 ```
 
-## Results 
+## Model Results 
 
 The following results document the validated loss and prediction attributes the top 5 models on the test data.
 ```
@@ -168,6 +172,8 @@ model 4 Loss: 0.5524091124534607, Accuracy: 0.7328279614448547
 model 5 Loss: 0.5549689531326294, Accuracy: 0.7328279614448547
 
 ```
+
+
 
 ## Summary
 As shown in the previous results, after some effort, I was not able to achieve a validated accuracy on the target of 75%.
